@@ -20,3 +20,4 @@ def create(request):
     myblog.pub_date = timezone.datetime.now()
     myblog.save()
     return redirect('/myblog/' + str(myblog.id))
+

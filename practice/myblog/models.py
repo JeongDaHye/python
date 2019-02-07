@@ -10,5 +10,4 @@ class Myblog(models.Model):
 
   def summary(self):
     return self.body[:150]
-    
 
