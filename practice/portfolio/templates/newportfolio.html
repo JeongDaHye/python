@@ -1,5 +1,5 @@
 {%extends 'base.html'%}
-
+{% load staticfiles %}
 {%block contents%}
 <body>
   <br />
@@ -16,7 +16,7 @@
       </div>
       <div class="form-group">
         <label for="image">Example file input</label>
-        <input type="file" class="form-control-file" id="image">
+        <input type="file" class="form-control-file" id="image"  name="image">
       </div>
       <input type="submit" class="btn btn-warning" value="Submit">
     </form>
