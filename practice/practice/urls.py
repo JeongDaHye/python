@@ -12,6 +12,7 @@ urlpatterns = [
     path('myblog/<int:blog_id>',myblog.views.detail, name="detail"),
     path('myblog/new/', myblog.views.new, name="new"),
     path('myblog/create/', myblog.views.create, name="create"),
+    path('myblog/newblog/',myblog.views.blogpost, name="newblog"),
     path('portfolio/', portfolio.views.portfolio, name="portfolio"),
     path('portfolio/newportfolio/', portfolio.views.newportfolio, name="newportfolio"),
     path('accounts/', include('accounts.urls')),
