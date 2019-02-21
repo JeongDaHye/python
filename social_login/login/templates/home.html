@@ -1,35 +1,91 @@
 {% load socialaccount %}
 {% providers_media_js %}
-
-<head>
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+    <title>간단한 지도 표시하기</title>
+    <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=yb3kgc7cg9"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-</head>
+  </head>
 
-<body>
-  <br />
-  <div class="badge badge-warning text-wrap" style="width: 15rem; height: 3rem; margin-left: 20px;">
-    <h2>Social login!</h2>
-  </div>
-  <br /><br />
+  <body>
+    <!--소셜로그인-->
+    <br />
+    <div class="badge badge-warning text-wrap" style="width: 15rem; height: 3rem; margin-left: 20px;">
+      <h2>Social login!</h2>
+    </div>
+    <br /><br />
 
-  <a href="/accounts/signup"  class="btn btn-info" role="button" style="margin-left: 20px;">
-    회원가입
-  </a>
-  <br /><br />
-  {% if user.is_authenticated %}
-    <a href="/accounts/logout"  class="btn btn-info" role="button" style="margin-left: 20px;">
-      로그아웃
+    <a href="/accounts/signup"  class="btn btn-info" role="button" style="margin-left: 20px;">
+      회원가입
     </a>
     <br /><br />
-    {{ user.username}}님이 로그인 중입니다.
-  {% else %}
-    <a href="{% provider_login_url 'google' %}"  class="btn btn-info" role="button" style="margin-left: 20px;">
-      구글 로그인
-    </a>
-    <br /><br />
-  {% endif %}
-</body>
+    {% if user.is_authenticated %}
+      <a href="/accounts/logout"  class="btn btn-info" role="button" style="margin-left: 20px;">
+        로그아웃
+      </a>
+      <br /><br />
+      {{ user.username}}님이 로그인 중입니다.
+    {% else %}
+      <a href="{% provider_login_url 'google' %}"  class="btn btn-info" role="button" style="margin-left: 20px;">
+        구글 로그인
+      </a>
+      <br /><br />
+    {% endif %}
+
+    <!--지도 표시하기-->
+    <div id="map" style="width:50%; height:450px; margin-left: 20px;"></div>
+    <script>
+    var mapOptions = {
+        center: new naver.maps.LatLng(37.3595704, 127.105399),
+        zoom: 11
+    };
+
+    var map = new naver.maps.Map('map', mapOptions);
+
+    var HOME_PATH = window.HOME_PATH || '.';
+
+    var cityhall = new naver.maps.LatLng(37.5666805, 126.9784147),
+        map = new naver.maps.Map('map', {
+            center: cityhall.destinationPoint(0, 500),
+            zoom: 10
+        }),
+        marker = new naver.maps.Marker({
+            map: map,
+            position: cityhall
+        });
+
+    var contentString = [
+            '<div class="iw_inner">',
+            '   <h3>내가 원하는 주소</h3>',
+            '   <p>서울특별시 중구 태평로1가 31 | 서울특별시 중구 세종대로 110 서울특별시청<br />',
+            '       <img src="'+ HOME_PATH +'/img/example/hi-seoul.jpg" width="55" height="55" alt="서울시청" class="thumb" /><br />',
+            '       02-120 | 공공,사회기관 &gt; 특별,광역시청<br />',
+            '       <a href="http://www.seoul.go.kr" target="_blank">www.seoul.go.kr/</a>',
+            '   </p>',
+            '</div>'
+        ].join('');
+
+    var infowindow = new naver.maps.InfoWindow({
+        content: contentString
+    });
+
+    naver.maps.Event.addListener(marker, "click", function(e) {
+        if (infowindow.getMap()) {
+            infowindow.close();
+        } else {
+            infowindow.open(map, marker);
+        }
+    });
+
+    infowindow.open(map, marker);
+    </script>
+  </body>
+</html>
 
